@@ -1,0 +1,59 @@
+.title {
+    background-color: White;
+}
+
+body {
+    background-image: url('/public/TEC.jpg');
+    background-size: fill; /* Ajusta la imagen para que cubra todo el fondo */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-position: center center; /* Centra la imagen en la página */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(3px); /* Aplica el desenfoque */
+    -webkit-backdrop-filter: blur(3px); 
+}
+
+
+.contenedor {
+    text-align: center; /* Centra horizontalmente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.margenCelda {
+    margin-left: 50px;
+}
+
+.contenido{
+    background-color: white;
+    border-radius: 1cm;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+.contenedor-botones {
+    background-color: white;
+    border-radius: 1cm;
+    margin-left: 200px;
+    margin-right: 200px;
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Centra los botones verticalmente (si es necesario) */
+    height: 55vh; /* Ajusta la altura del contenedor según sea necesario */
+}
+  
+.contenedor-botones button {
+    width: 200px; 
+    height: 300px;
+    font-size: 20px;
+    padding: 20px; 
+    margin: 10px; 
+}
+
+.icon-100 { 
+    font-size: 100px; 
+}
