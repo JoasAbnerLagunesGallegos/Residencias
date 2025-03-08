@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="icon" type="image/svg+xml" href="/public/logo1.png" />
+    <link rel="stylesheet" href="src/usuarios.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SISTEMA DE INVENTARIO</title>
+  </head>
+
+  <body>
+
+    <div class="title">
+      <table>
+      <td>
+        <div class="contenedor"> <img src="public/logo1.png" alt="Logo" height="100px" width="100px"> </div>
+      </td>
+      <td>
+        <div class="margenCelda">
+        <h1>SISTEMA DE INVENTARIO</h1>
+        <h4>DEPARTAMENTO DE RECURSOS MATERIALES Y SERVICIOS</h4>
+        </div>
+      </td>
+
+
+      <td>
+        <div class="margenBotones">
+          <br>
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalGuide">
+          <i class="bi bi-book"></i> Guía de usuario
+
+        </div>
+      </td>
+
+      </table>
+    </div>
+
+    <br><br>
+
+    <div class="contenedor-botones">
+
+      <div class="contenedor-botones-titulo">
+        <br>
+        <h5>MENÚ DE USUARIO:</h5> <h6>¡Bienvenido(a), (Nombre de usuario)!</h6>
+    </div>
+      
+      <br>
+
+      <div class="contenedor-botones-opciones">
+        <button type="button" class="btn btn-dark">
+          <i class="bi bi-person-lines-fill"> Detalles de usuario</i>
+        </button>
+ 
+      <button type="button" class="btn btn-dark">
+        <i class="bi bi-send-plus"> Solicitar cambios</i>
+      </button>
+    
+        <a href="index.html"><button type="button" class="btn btn-danger">
+          <i class="bi bi-box-arrow-left"> Cerrar sesión</i>
+        </button></a>
+      
+     </div>
+           
+     <br>
+        <div class="contenedor">
+           <h6>TUS INMUEBLES ASIGNADOS:</h6> 
+        </div>
+     <br>
+
+        <div class="tablaContenido">
+            <table border="1">
+                <tr>
+                    <th>No. ITTUX</th>
+                    <th>No. SIBISEP</th>
+                    <th>Nombre del inmueble</th>
+                    <th>Estado</th>
+                    <th>Ubicación</th>
+                    <th>Detalles</th>
+                </tr>
+                <tr>
+                    <td>Celda 1</td>
+                    <td>Celda 2</td>
+                    <td>Celda 3</td>
+                    <td>Celda 4</td>
+                    <td>Celda 5</td>
+                    <td>
+                      <div class="tabla-mostrar">
+                        <button type="button" class="btn btn-dark">
+                          <i class="bi bi-eye"> Mostrar</i>
+                        </button>
+                      </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <br><br>
+   
+    </div>
+
+    <footer>
+      <br><br>
+
+      <div class="title">
+        <br>
+        <p class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS DEL INSTITUTO TECNOLOGICO DE TUXTEPEC
+        </p>
+        <br>
+      </div>
+    </footer>
+
+  </body>
+
+</html>
