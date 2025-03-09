@@ -1,132 +1,176 @@
 <!doctype html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" type="image/svg+xml" href="/public/logo1.png" />
-    <link rel="stylesheet" href="src/administrador.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SISTEMA DE INVENTARIO</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="icon" type="image/svg+xml" href="/public/logo1.png" />
+  <link rel="stylesheet" href="src/administrador.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SISTEMA DE INVENTARIO</title>
+</head>
 
-  <body>
+<body>
 
-    <div class="title">
-      <table>
+  <div class="title">
+    <table>
       <td>
         <div class="contenedor"> <img src="public/logo1.png" alt="Logo" height="100px" width="100px"> </div>
       </td>
       <td>
         <div class="margenCelda">
-        <h1>SISTEMA DE INVENTARIO</h1>
-        <h4>DEPARTAMENTO DE RECURSOS MATERIALES Y SERVICIOS</h4>
+          <h1>SISTEMA DE INVENTARIO</h1>
+          <h4>DEPARTAMENTO DE RECURSOS MATERIALES Y SERVICIOS</h4>
         </div>
       </td>
 
+    </table>
+  </div>
 
-      <td>
-        <div class="margenBotones">
-          <br>
-        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalGuide">
-          <i class="bi bi-book"></i> Guía de usuario
+  <br><br>
 
-        </div>
-      </td>
+  <div class="contenedor-botones">
 
-      </table>
+    <div class="contenedor-botones-titulo">
+      <br>
+      <h5>MENÚ DE ADMINISTRADOR:</h5>
+      <h6>¡Bienvenido(a), (Nombre de administrador)!</h6>
     </div>
 
     <br><br>
 
-    <div class="contenedor-botones">
-
-      <div class="contenedor-botones-titulo">
-        <br>
-        <h5>MENÚ DE ADMINISTRADOR:</h5> <h6>¡Bienvenido(a), (Nombre de administrador)!</h6>
-    </div>
-      
-      <br>
-
-      <div class="contenedor-botones-opciones">
-        <button type="button" class="btn btn-dark">
-          <i class="bi bi-person-lines-fill"> Detalles del administrador</i>
-        </button>
- 
+    <div class="contenedor-botones-opciones">
       <button type="button" class="btn btn-dark">
+        <i class="bi bi-person-lines-fill"> Detalles del administrador</i>
+      </button>
+
+      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalBandeja">
         <i class="bi bi-envelope-arrow-down-fill"> Bandeja de entrada</i>
       </button>
-    
-      <button type="button" class="btn btn-dark">
+
+      <a href="admusr.html"><button type="button" class="btn btn-dark">
           <i class="bi bi-people-fill"> Administrar usuarios</i>
-      </button>
-      
-     </div>
-
-     <br>
-
-      <div class="contenedor-botones-opciones">
-        <button type="button" class="btn btn-warning">
-          <i class="bi bi-card-list"> Modificar registros</i>
-      </button>
-    
-        <a href="index.html"><button type="button" class="btn btn-danger">
-          <i class="bi bi-box-arrow-left"> Cerrar sesión</i>
         </button></a>
-      
-     </div>
-           
-     <br>
-        <div class="contenedor">
-           <h6>VISTA GENERAL DE LOS INMUEBLES:</h6> 
-        </div>
-     <br>
 
-        <div class="tablaContenido">
-            <table border="1">
-                <tr>
-                    <th>No. ITTUX</th>
-                    <th>No. SIBISEP</th>
-                    <th>Nombre del inmueble</th>
-                    <th>Estado</th>
-                    <th>Ubicación</th>
-                    <th>Detalles</th>
-                </tr>
-                <tr>
-                    <td>Celda 1</td>
-                    <td>Celda 2</td>
-                    <td>Celda 3</td>
-                    <td>Celda 4</td>
-                    <td>Celda 5</td>
-                    <td>
-                      <div class="tabla-mostrar">
-                        <button type="button" class="btn btn-dark">
-                          <i class="bi bi-eye"> Mostrar</i>
-                        </button>
-                      </div>
-                    </td>
-                </tr>
-            </table>
+  
 
-        </div>
+      <button type="button" id="exitbutton" class="btn btn-danger">
+        <i class="bi bi-box-arrow-left"> Cerrar sesión</i>
+      </button>
+      <script>
+        document.getElementById('exitbutton').addEventListener('click', function () {
+          Swal.fire({
+            title: '¿Desea cerrar sesión?',
+            icon: 'question',
+            showDenyButton: true,
+            confirmButtonText: 'Sí',
+            denyButtonText: `No`
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = 'index.html';
+            }
+          });
+        });
+      </script>
 
-        <br><br>
-   
     </div>
 
-    <footer>
-      <br><br>
+    <br>
+    <div class="contenedor">
+      <h6>VISTA GENERAL DE LOS INMUEBLES:</h6>
+    </div>
+    <br>
 
-      <div class="title">
-        <br>
-        <p class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS DEL INSTITUTO TECNOLOGICO DE TUXTEPEC
-        </p>
-        <br>
+    <div class="tablaContenido">
+      <table border="1">
+        <tr>
+          <th>No. ITTUX</th>
+          <th>Estado</th>
+          <th>Nombre del inmueble</th>
+          <th>Resguardante</th>
+          <th>Editar</th>
+          <th>Detalles</th>
+        </tr>
+        <tr>
+          <td>Celda 1</td>
+          <td>Celda 2</td>
+          <td>Celda 3</td>
+          <td>Celda 4</td>
+          <td>
+            <div class="tabla-mostrar">
+              <button type="button" class="btn btn-success">
+                <i class="bi bi-pencil-square"> Editar</i>
+              </button>
+            </div>
+          </td>
+          <td>
+            <div class="tabla-mostrar">
+              <button type="button" class="btn btn-dark">
+                <i class="bi bi-eye"> Mostrar</i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+
+    <br><br>
+
+  </div>
+
+  <!-- Modal de bandeja de entrada-->
+  <div class="modal fade" id="ModalBandeja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Envio de solicitudes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="modalBody">
+
+            <div id="message-inbox">
+
+              <div id="messages"></div>
+              <button id="clear-messages">Borrar mensajes</button>
+              
+          </div>
+          <script src="src/assets/Bandeja.js"></script>
+
+            <br>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
       </div>
-    </footer>
+    </div>
+  </div>
+  <!-- Modal de bandeja de entrada!-->
 
-  </body>
+  <footer>
+    <br><br>
+
+    <div class="title">
+      <br>
+      <h5 class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS
+      </h5>
+      <h6 class="contenedor">INSTITUTO TECNOLOGICO DE TUXTEPEC
+      </h6>
+      <br>
+    </div>
+  </footer>
+
+</body>
 
 </html>

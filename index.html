@@ -1,222 +1,183 @@
 <!doctype html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" type="image/svg+xml" href="/public/logo1.png" />
-    <link rel="stylesheet" href="src/main.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SISTEMA DE INVENTARIO</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="icon" type="image/svg+xml" href="/public/logo1.png" />
+  <link rel="stylesheet" href="src/main.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SISTEMA DE INVENTARIO</title>
+</head>
 
-  <body>
+<body>
 
-    <div class="title">
-      <table>
+  <div class="title">
+    <table>
       <td>
         <div class="contenedor"> <img src="public/logo1.png" alt="Logo" height="100px" width="100px"> </div>
       </td>
       <td>
         <div class="margenCelda">
-        <h1>SISTEMA DE INVENTARIO</h1>
-        <h4>DEPARTAMENTO DE RECURSOS MATERIALES Y SERVICIOS</h4>
+          <h1>SISTEMA DE INVENTARIO</h1>
+          <h4>DEPARTAMENTO DE RECURSOS MATERIALES Y SERVICIOS</h4>
         </div>
       </td>
 
+    </table>
+  </div>
 
-      <td>
-        <div class="margenBotones">
-          <br>
-        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalGuide">
-          <i class="bi bi-book"></i> Guía de usuario
+  <br><br>
 
-        </div>
-      </td>
+  <div class="contenedor-botones">
 
-      </table>
+    <div class="contenedor-botones-titulo">
+      <br>
+      <h5>OPCIONES DE INICIO DE SESIÓN</h5>
     </div>
 
+    <div class="contenedor-botones-centro">
+      <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ModalUsuario">
+        <i class="bi bi-person-fill icon-100"></i>
+        <p>USUARIO</p>
+      </button>
+
+      <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ModalAdmin">
+        <i class="bi bi-person-badge icon-100"></i>
+        <p>ADMINISTRADOR</p>
+      </button>
+
+      <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ModalGuide">
+        <i class="bi bi-book icon-100"></i>
+        <P>MANUAL DE USO</P>
+      </button>
+    </div>
+
+  </div>
+
+  </div>
+
+  <!-- Modal de inicio de sesión de usuario -->
+  <div class="modal fade" id="ModalUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Inicio de sesión de usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="modalBody">
+
+            <i class="bi bi-person-fill icon-100"></i>
+
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Nombre de usuario</label>
+            </div>
+            <div class="form-floating">
+              <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+              <label for="floatingPassword">Contraseña</label>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <a href="usuarios.html"><button type="button" class="btn btn-primary">Continuar</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal de inicio de sesión de usuario -->
+
+  <!-- Modal de inicio de sesión de administrador -->
+  <div class="modal fade" id="ModalAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Inicio de sesión de administrador</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="modalBody">
+
+            <i class="bi bi-person-badge icon-100"></i>
+
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Nombre de usuario</label>
+            </div>
+            <div class="form-floating">
+              <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+              <label for="floatingPassword">Contraseña</label>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <a href="administrador.html"><button type="button" class="btn btn-primary">Continuar</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal de inicio de sesión de administrador -->
+
+
+  <!-- Modal de guia de usuario -->
+  <div class="modal fade" id="ModalGuide" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Guía de usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="modalBody">
+
+            <i class="bi bi-book icon-100"></i>
+
+            <div>AQUI ESTARA LA GUIA DE USUARIO</div>
+
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary">Continuar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal de guia de usuario -->
+
+  <footer>
     <br><br>
 
-    <div class="contenedor-botones">
-
-      <div class="contenedor-botones-titulo">
-        <br>
-        <h5>OPCIONES DE INICIO DE SESIÓN</h5> 
-      </div>
-
-      <div class="contenedor-botones-centro">
-          <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ModalUsuario">
-          <i class="bi bi-person-fill icon-100"></i>
-          <p>USUARIO</p>
-          </button>
-
-          <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ModalAdmin">
-          <i class="bi bi-person-badge icon-100"></i>
-          <p>ADMINISTRADOR</p>
-          </button>
-
-          <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#ModalAdd">
-          <i class="bi bi-person-fill-add icon-100"></i>
-          <P>AÑADIR USUARIO</P>
-          </button>    
-      </div>
-
-      </div>
-
+    <div class="title">
+      <br>
+      <h5 class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS
+      </h5>
+      <h6 class="contenedor">INSTITUTO TECNOLOGICO DE TUXTEPEC
+      </h6>
+      <br>
     </div>
+  </footer>
 
-    <!-- Modal de inicio de sesión de usuario -->
-<div class="modal fade" id="ModalUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Inicio de sesión de usuario</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <div class="modalBody">
-
-        <i class="bi bi-person-fill icon-100"></i>
-
-        <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">Nombre de usuario</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-          <label for="floatingPassword">Contraseña</label>
-        </div>
-
-      </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <a href="usuarios.html"><button type="button" class="btn btn-primary">Continuar</button></a>
-      </div>
-    </div>
-  </div>
-</div>
-    <!-- Modal de inicio de sesión de usuario -->
-
-    <!-- Modal de inicio de sesión de administrador -->
-<div class="modal fade" id="ModalAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Inicio de sesión de administrador</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <div class="modalBody">
-
-        <i class="bi bi-person-badge icon-100"></i>
-
-        <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">Nombre de usuario</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-          <label for="floatingPassword">Contraseña</label>
-        </div>
-
-      </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <a href="administrador.html"><button type="button" class="btn btn-primary">Continuar</button></a>
-      </div>
-    </div>
-  </div>
-</div>
-    <!-- Modal de inicio de sesión de administrador -->
-
-     <!-- Modal de añadir usuario -->
-<div class="modal fade" id="ModalAdd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Registro de usuarios</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <div class="modalBody">
-
-        <i class="bi bi-person-fill-add icon-100"></i>
-
-        <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-          <label for="floatingInput">Nombre de usuario</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-          <label for="floatingPassword">Contraseña</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-          <label for="floatingPassword">Repetir Contraseña</label>
-        </div>
-
-      </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary">Continuar</button>
-      </div>
-    </div>
-  </div>
-</div>
-    <!-- Modal de añadir usuario -->
-
-    <!-- Modal de guia de usuario -->
-<div class="modal fade" id="ModalGuide" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Guía de usuario</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <div class="modalBody">
-
-        <i class="bi bi-book icon-100"></i>
-
-       <div>AQUI ESTARA LA GUIA DE USUARIO</div> 
-
-      </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary">Continuar</button>
-      </div>
-    </div>
-  </div>
-</div>
-    <!-- Modal de guia de usuario -->
-
-    <footer>
-      <br><br>
-
-      <div class="title">
-        <br>
-        <p class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS DEL INSTITUTO TECNOLOGICO DE TUXTEPEC
-        </p>
-        <br>
-      </div>
-    </footer>
-
-  </body>
+</body>
 
 </html>

@@ -1,119 +1,224 @@
 <!doctype html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" type="image/svg+xml" href="/public/logo1.png" />
-    <link rel="stylesheet" href="src/usuarios.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SISTEMA DE INVENTARIO</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="icon" type="image/svg+xml" href="/public/logo1.png" />
+  <link rel="stylesheet" href="src/usuarios.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SISTEMA DE INVENTARIO</title>
+</head>
 
-  <body>
+<body>
 
-    <div class="title">
-      <table>
+  <div class="title">
+    <table>
       <td>
         <div class="contenedor"> <img src="public/logo1.png" alt="Logo" height="100px" width="100px"> </div>
       </td>
       <td>
         <div class="margenCelda">
-        <h1>SISTEMA DE INVENTARIO</h1>
-        <h4>DEPARTAMENTO DE RECURSOS MATERIALES Y SERVICIOS</h4>
+          <h1>SISTEMA DE INVENTARIO</h1>
+          <h4>DEPARTAMENTO DE RECURSOS MATERIALES Y SERVICIOS</h4>
         </div>
       </td>
 
 
-      <td>
-        <div class="margenBotones">
-          <br>
-        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalGuide">
-          <i class="bi bi-book"></i> Guía de usuario
+    </table>
+  </div>
 
-        </div>
-      </td>
+  <br><br>
 
+  <div class="contenedor-botones">
+
+    <div class="contenedor-botones-titulo">
+      <br>
+      <h5>MENÚ DE USUARIO:</h5>
+      <h6>¡Bienvenido(a), (Nombre de usuario)!</h6>
+    </div>
+
+    <br>
+
+    <div class="contenedor-botones-opciones">
+      <button type="button" class="btn btn-dark">
+        <i class="bi bi-person-lines-fill"> Detalles de usuario</i>
+      </button>
+
+      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalSolicitud">
+        <i class="bi bi-send-plus"> Solicitar cambios</i>
+      </button>
+
+      <button type="button" id="exitbutton" class="btn btn-danger">
+        <i class="bi bi-box-arrow-left"> Cerrar sesión</i>
+      </button>
+      <script>
+        document.getElementById('exitbutton').addEventListener('click', function () {
+          Swal.fire({
+            title: '¿Desea cerrar sesión?',
+            icon: 'question',
+            showDenyButton: true,
+            confirmButtonText: 'Sí',
+            denyButtonText: `No`
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = 'index.html';
+            }
+          });
+        });
+      </script>
+
+
+    </div>
+
+    <br>
+    <div class="contenedor">
+      <h6>TUS INMUEBLES ASIGNADOS:</h6>
+    </div>
+    <br>
+
+    <div class="tablaContenido">
+      <table border="1">
+        <tr>
+          <th>No. ITTUX</th>
+          <th>Nombre del inmueble</th>
+          <th>Estado</th>
+          <th>Ubicación</th>
+          <th>Detalles</th>
+        </tr>
+        <tr>
+          <td>Celda 1</td>
+          <td>Celda 2</td>
+          <td>Celda 3</td>
+          <td>Celda 4</td>
+          <td>
+            <div class="tabla-mostrar">
+              <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalDetalles">
+                <i class="bi bi-eye"> Mostrar</i>
+              </button>
+            </div>
+          </td>
+        </tr>
       </table>
+
+      <br><br>
+
     </div>
 
     <br><br>
 
-    <div class="contenedor-botones">
+  </div>
 
-      <div class="contenedor-botones-titulo">
-        <br>
-        <h5>MENÚ DE USUARIO:</h5> <h6>¡Bienvenido(a), (Nombre de usuario)!</h6>
-    </div>
-      
-      <br>
-
-      <div class="contenedor-botones-opciones">
-        <button type="button" class="btn btn-dark">
-          <i class="bi bi-person-lines-fill"> Detalles de usuario</i>
-        </button>
- 
-      <button type="button" class="btn btn-dark">
-        <i class="bi bi-send-plus"> Solicitar cambios</i>
-      </button>
-    
-        <a href="index.html"><button type="button" class="btn btn-danger">
-          <i class="bi bi-box-arrow-left"> Cerrar sesión</i>
-        </button></a>
-      
-     </div>
-           
-     <br>
-        <div class="contenedor">
-           <h6>TUS INMUEBLES ASIGNADOS:</h6> 
+  <!-- Modal de mostrar detalles del registro -->
+  <div class="modal fade" id="ModalDetalles" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Detalles del bien</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-     <br>
+        <div class="modal-body">
 
-        <div class="tablaContenido">
-            <table border="1">
-                <tr>
-                    <th>No. ITTUX</th>
-                    <th>No. SIBISEP</th>
-                    <th>Nombre del inmueble</th>
-                    <th>Estado</th>
-                    <th>Ubicación</th>
-                    <th>Detalles</th>
-                </tr>
-                <tr>
-                    <td>Celda 1</td>
-                    <td>Celda 2</td>
-                    <td>Celda 3</td>
-                    <td>Celda 4</td>
-                    <td>Celda 5</td>
-                    <td>
-                      <div class="tabla-mostrar">
-                        <button type="button" class="btn btn-dark">
-                          <i class="bi bi-eye"> Mostrar</i>
-                        </button>
-                      </div>
-                    </td>
-                </tr>
-            </table>
+          <div class="modalBodyDetalles">
+
+            <li>
+              Nombre:
+            </li>
+            <br>
+            <li>
+              Descripción:
+            </li>
+            <br>
+            <li>
+              Edificio:
+            </li>
+            <br>
+            <li>
+              Ubicación:
+            </li>
+            <br>
+            <li>
+              No. SIBISEP:
+            </li>
+            <br>
+            <li>
+              Precio:
+            </li>
+            <br>
+            <li>
+              Resguardante:
+            </li>
+            <br>
+            <li>
+              No. de serie:
+            </li>
+            <br>
+          </div>
 
         </div>
-
-        <br><br>
-   
-    </div>
-
-    <footer>
-      <br><br>
-
-      <div class="title">
-        <br>
-        <p class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS DEL INSTITUTO TECNOLOGICO DE TUXTEPEC
-        </p>
-        <br>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
       </div>
-    </footer>
+    </div>
+  </div>
 
-  </body>
+  <!-- Modal de mostrar detalles del registro-->
+
+  <!-- Modal de envio de solicitudes -->
+  <div class="modal fade" id="ModalSolicitud" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Envio de solicitudes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="modalBody">
+
+            <div id="message-system">
+              <form id="message-form">
+                <input type="text" id="message-input" placeholder="Escribe tu mensaje aquí" required>
+                <button type="submit">Enviar</button>
+              </form>
+            </div>
+            <script src="src/assets/Enviar.js"></script>
+
+            <br>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal de envio de solicitudes!-->
+
+  <footer>
+    <br><br>
+
+    <div class="title">
+      <br>
+      <h5 class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS
+      </h5>
+      <h6 class="contenedor">INSTITUTO TECNOLOGICO DE TUXTEPEC
+      </h6>
+      <br>
+    </div>
+    </div>
+  </footer>
+
+</body>
 
 </html>
