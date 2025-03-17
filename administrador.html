@@ -38,9 +38,21 @@
   <div class="contenedor-botones">
 
     <div class="contenedor-botones-titulo">
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const adminEmail = localStorage.getItem("adminEmail");
+
+          if (adminEmail) {
+            document.getElementById("adminEmailDisplay").textContent = adminEmail;
+          } else {
+            document.getElementById("adminEmailDisplay").textContent = "No se encontró un email.";
+          }
+        });
+
+      </script>
       <br>
       <h5>MENÚ DE ADMINISTRADOR:</h5>
-      <h6>¡Bienvenido(a), (Nombre de administrador)!</h6>
+      <h6>¡Bienvenido(a), <span id="adminEmailDisplay"></span>!</h6>
     </div>
 
     <br><br>
@@ -58,7 +70,7 @@
           <i class="bi bi-people-fill"> Administrar usuarios</i>
         </button></a>
 
-  
+
 
       <button type="button" id="exitbutton" class="btn btn-danger">
         <i class="bi bi-box-arrow-left"> Cerrar sesión</i>
@@ -88,88 +100,127 @@
     <br>
 
     <div class="tablaContenido">
-      <table border="1">
-        <tr>
-          <th>No. ITTUX</th>
-          <th>Estado</th>
-          <th>Nombre del inmueble</th>
-          <th>Resguardante</th>
-          <th>Editar</th>
-          <th>Detalles</th>
-        </tr>
-        <tr>
-          <td>Celda 1</td>
-          <td>Celda 2</td>
-          <td>Celda 3</td>
-          <td>Celda 4</td>
-          <td>
-            <div class="tabla-mostrar">
-              <button type="button" class="btn btn-success">
-                <i class="bi bi-pencil-square"> Editar</i>
-              </button>
-            </div>
-          </td>
-          <td>
-            <div class="tabla-mostrar">
-              <button type="button" class="btn btn-dark">
-                <i class="bi bi-eye"> Mostrar</i>
-              </button>
-            </div>
-          </td>
-        </tr>
+      <table border="1" id="tablaDatos">
+        <thead>
+          <tr>
+            <th>Control Interno</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Resguardante</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se insertarán las filas dinámicamente -->
+        </tbody>
       </table>
 
-    </div>
+      <script>
+        // URL de la API (backend en localhost)
+        const apiUrl = "http://localhost:3000/bienes";
 
-    <br><br>
 
-  </div>
 
-  <!-- Modal de bandeja de entrada-->
-  <div class="modal fade" id="ModalBandeja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Envio de solicitudes</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+        // Función para cargar los datos
+        async function cargarDatos() {
+          try {
+            const respuesta = await fetch(apiUrl); // Solicitud a la API
+            const datos = await respuesta.json();
 
-          <div class="modalBody">
+            // Selecciona el cuerpo de la tabla
+            const tablaCuerpo = document.querySelector("#tablaDatos tbody");
 
-            <div id="message-inbox">
+            // Crea filas dinámicas
+            datos.forEach(fila => {
+              const tr = document.createElement("tr");
 
-              <div id="messages"></div>
-              <button id="clear-messages">Borrar mensajes</button>
-              
+              const tdControlInterno = document.createElement("td");
+              tdControlInterno.textContent = fila.ControlInterno;
+
+              const tdCategoria = document.createElement("td");
+              tdCategoria.textContent = fila.Categoria;
+
+              const tdDescripcion = document.createElement("td");
+              tdDescripcion.textContent = fila.Descripcion;
+
+              const tdResguardante = document.createElement("td");
+              tdResguardante.textContent = fila.Resguardante;
+
+              const tdEstado = document.createElement("td");
+              tdEstado.textContent = fila.Estado;
+
+              tr.appendChild(tdControlInterno);
+              tr.appendChild(tdCategoria);
+              tr.appendChild(tdDescripcion);
+              tr.appendChild(tdResguardante);
+              tr.appendChild(tdEstado);
+
+              tablaCuerpo.appendChild(tr);
+            });
+          } catch (error) {
+            console.error("Error al cargar los datos:", error);
+          }
+        }
+
+        // Llama a la función al cargar la página
+        cargarDatos();
+      </script>
+
+
+</html>
+
+
+</div>
+
+<br><br>
+
+</div>
+
+<!-- Modal de bandeja de entrada-->
+<div class="modal fade" id="ModalBandeja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Envio de solicitudes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="modalBody">
+
+          <div id="message-inbox">
+
+            <div id="messages"></div>
+            <button id="clear-messages">Borrar mensajes</button>
+
           </div>
           <script src="src/assets/Bandeja.js"></script>
 
-            <br>
-          </div>
+          <br>
+        </div>
 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
       </div>
     </div>
   </div>
-  <!-- Modal de bandeja de entrada!-->
+</div>
+<!-- Modal de bandeja de entrada!-->
 
-  <footer>
-    <br><br>
+<footer>
+  <br><br>
 
-    <div class="title">
-      <br>
-      <h5 class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS
-      </h5>
-      <h6 class="contenedor">INSTITUTO TECNOLOGICO DE TUXTEPEC
-      </h6>
-      <br>
-    </div>
-  </footer>
+  <div class="title">
+    <br>
+    <h5 class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS
+    </h5>
+    <h6 class="contenedor">INSTITUTO TECNOLOGICO DE TUXTEPEC
+    </h6>
+    <br>
+  </div>
+</footer>
 
 </body>
 

@@ -109,30 +109,61 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-
           <div class="modalBody">
-
             <i class="bi bi-person-badge icon-100"></i>
-
             <div class="form-floating mb-3">
-              <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-              <label for="floatingInput">Nombre de usuario</label>
+              <input type="email" class="form-control" id="adminEmail" placeholder="NombreAdministrador">
+              <label for="adminEmail">Nombre de usuario</label>
             </div>
             <div class="form-floating">
-              <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-              <label for="floatingPassword">Contraseña</label>
+              <input type="password" class="form-control" id="adminPassword" placeholder="Contraseña">
+              <label for="adminPassword">Contraseña</label>
             </div>
-
           </div>
-
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <a href="administrador.html"><button type="button" class="btn btn-primary">Continuar</button></a>
+          <button type="button" class="btn btn-primary" id="adminLoginBtn">Continuar</button>
         </div>
       </div>
     </div>
+    <script>
+      document.getElementById("adminLoginBtn").addEventListener("click", async () => {
+        const Email = document.getElementById("adminEmail").value;
+        const Contraseña = document.getElementById("adminPassword").value;
+
+        try {
+          const respuesta = await fetch("http://localhost:3000/admin-login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ Email, Contraseña })
+          });
+
+          if (respuesta.ok) {
+            localStorage.setItem("adminEmail", Email);
+            window.location.href = "administrador.html"; // Redirige a la página de administrador
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "¡Error de inicio de sesión!",
+              text: "Los datos proporcionados son incorrectos",
+            });
+          }
+        } catch (error) {
+          console.error("Error al intentar iniciar sesión:", error);
+          Swal.fire({
+            icon: "error",
+            title: "¡Error de inicio de sesión!",
+            text: "Error en al acceder al servidor",
+          });
+        }
+      });
+
+    </script>
   </div>
+
   <!-- Modal de inicio de sesión de administrador -->
 
 

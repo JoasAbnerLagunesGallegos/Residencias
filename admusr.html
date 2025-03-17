@@ -62,64 +62,66 @@
         <br>
 
         <div class="tablaContenido">
-            <table border="1">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Contraseña</th>
-                    <th>Autoridad</th>
-                    <th>Inmueble asignado</th>
-                    <th>Editar</th>
-                    <th>Eliminar</th>
-                </tr>
-                <tr>
-                    <td>Celda 1</td>
-                    <td>Celda 2</td>
-                    <td>Celda 3</td>
-                    <td>
-                        <div class="tabla-mostrar">
-                            <button type="button" class="btn btn-dark">
-                                <i class="bi bi-eye"> Mostrar</i>
-                            </button>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="tabla-mostrar">
-                            <button type="button" class="btn btn-success">
-                                <i class="bi bi-pencil-square"> Editar</i>
-                            </button>
-                    </td>
-
-                    <td>
-                        <div class="tabla-mostrar">
-                            <button type="button" id="deleteuser" class="btn btn-danger">
-                                <i class="bi bi-trash">Borrar</i>
-                            </button>
-                            <script>
-                                document.getElementById('deleteuser').addEventListener('click', function () {
-                                    Swal.fire({
-                                        title: '¿Desea borrar este usuario?',
-                                        icon: 'question',
-                                        showDenyButton: true,
-                                        confirmButtonText: 'Sí',
-                                        denyButtonText: `No`
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            Swal.fire({
-                                                title: "¡Borrado!",
-                                                text: "El usuario se ha borrado exitosamente.",
-                                                icon: "success"
-                                            });
-                                        }
-                                    });
-                                });
-                            </script>
-                        </div>
-                    </td>
-                </tr>
+            <table border="1" id="tablaUsuarios">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Contraseña</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se insertarán las filas dinámicamente -->
+                </tbody>
             </table>
+
+            <script>
+                // URL de la API (backend en localhost)
+                const apiUrl = "http://localhost:3000/usuarios";
+
+
+
+                // Función para cargar los datos
+                async function cargarDatos() {
+                    try {
+                        const respuesta = await fetch(apiUrl); // Solicitud a la API
+                        const datos = await respuesta.json();
+
+                        // Selecciona el cuerpo de la tabla
+                        const tablaCuerpo = document.querySelector("#tablaUsuarios tbody");
+
+                        // Crea filas dinámicas
+                        datos.forEach(fila => {
+                            const tr = document.createElement("tr");
+
+                            const tdNombre = document.createElement("td");
+                            tdNombre.textContent = fila.Nombre;
+
+                            const tdContraseña = document.createElement("td");
+                            tdContraseña.textContent = fila.Contraseña;
+
+                            const tdEstado = document.createElement("td");
+                            tdEstado.textContent = fila.Estado;
+
+                            tr.appendChild(tdNombre);
+                            tr.appendChild(tdContraseña);
+                            tr.appendChild(tdEstado);
+
+                            tablaCuerpo.appendChild(tr);
+                        });
+                    } catch (error) {
+                        console.error("Error al cargar los datos:", error);
+                    }
+                }
+
+                // Llama a la función al cargar la página
+                cargarDatos();
+            </script>
         </div>
 
-        <br><br>
+
+
+    <br><br>
 
     </div>
 
