@@ -59,7 +59,7 @@
 
     <div class="contenedor-botones-opciones">
       <button type="button" class="btn btn-dark">
-        <i class="bi bi-person-lines-fill"> Detalles del administrador</i>
+        <i class="bi bi-person-lines-fill"> Perfil de administrador</i>
       </button>
 
       <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalBandeja">
@@ -93,11 +93,209 @@
 
     </div>
 
+    <br> <br>
+
+    <div class="contenedor">
+      <h4>VISTA DE LOS INMUEBLES REGISTRADOS:</h4>
+    </div>
+
+    <div class="paginacion">
+      <div class="contenedor-botones-opciones-2">
+        <button id="primeraPagina" class="btn btn-success"><i class="bi bi-skip-start-fill"></i> Primera Página</button>
+        <button id="prevPage" class="btn btn-primary"><i class="bi bi-arrow-left-short"></i> Anterior</button>
+        <div class="contenedor-paginacion">
+          <input type="number" id="inputPagina" min="1" value="1">
+          <span id="paginaActual">/</span>
+        </div>
+        <button id="nextPage" class="btn btn-primary">Siguiente <i class="bi bi-arrow-right-short"></i></button>
+        <button id="ultimaPagina" class="btn btn-success">Última Página <i class="bi bi-skip-end-fill"></i></button>
+      </div>
+    </div>
+
     <br>
     <div class="contenedor">
-      <h6>VISTA GENERAL DE LOS INMUEBLES:</h6>
+      <h6>BUSQUEDA DE REGISTROS:</h6>
     </div>
+    
+    <div class="contenedor-busqueda">
+    <input type="text" id="busqueda" placeholder="Buscar...">
+    <button id="btnBuscar" class="btn btn-success">Buscar</button>
+    <button id="cancelarBusqueda" class="btn btn-secondary">Cancelar Búsqueda</button>
+    </div>
+
+    <script>
+      document.getElementById("btnBuscar").addEventListener("click", () => {
+        const termino = document.getElementById("busqueda").value.toLowerCase();
+        filtrarDatos(termino);
+      });
+
+      document.getElementById("cancelarBusqueda").addEventListener("click", () => {
+        document.getElementById("busqueda").value = "";
+        mostrarPagina(paginaActual); // Regresar al estado original
+      });
+
+      function filtrarDatos(termino) {
+        const tablaCuerpo = document.querySelector("#tablaDatos tbody");
+        tablaCuerpo.innerHTML = "";
+
+        const datosFiltrados = datos.filter(fila =>
+          fila.INVENTARIOINT.toLowerCase().includes(termino) ||
+          fila.CATEGORIAS.toLowerCase().includes(termino) ||
+          fila.DESCRIPCION.toLowerCase().includes(termino) ||
+          fila.RESGUARDANTE.toLowerCase().includes(termino) ||
+          fila.ESTADO.toLowerCase().includes(termino)
+        );
+
+        datosFiltrados.forEach(fila => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${fila.INVENTARIOINT}</td>
+            <td>${fila.CATEGORIAS}</td>
+            <td>${fila.DESCRIPCION}</td>
+            <td>${fila.RESGUARDANTE}</td>
+            <td>${fila.ESTADO}</td>
+            <td>
+                <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#ModalMasInfo" onclick="actualizarModal(${fila.ID})">
+                    <i class="bi bi-eye"></i> Mostrar todo
+                </button>
+            </td>
+        `;
+          tablaCuerpo.appendChild(tr);
+        });
+
+        actualizarUI();
+      }
+
+    </script>
+
     <br>
+
+    <script>
+      const apiUrl = "http://localhost:3000/general";
+      const elementosPorPagina = 10;
+      let paginaActual = 1;
+      let datos = [];
+
+      async function cargarDatos() {
+        try {
+          const respuesta = await fetch(apiUrl);
+          datos = await respuesta.json();
+          actualizarUI();
+          mostrarPagina(paginaActual);
+        } catch (error) {
+          console.error("Error al cargar los datos:", error);
+        }
+      }
+
+      function mostrarPagina(pagina) {
+        const tablaCuerpo = document.querySelector("#tablaDatos tbody");
+        tablaCuerpo.innerHTML = "";
+
+        const inicio = (pagina - 1) * elementosPorPagina;
+        const fin = inicio + elementosPorPagina;
+        const datosPagina = datos.slice(inicio, fin);
+
+        datosPagina.forEach(fila => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+      <td>${fila.INVENTARIOINT}</td>
+      <td>${fila.CATEGORIAS}</td>
+      <td>${fila.DESCRIPCION}</td>
+      <td>${fila.RESGUARDANTE}</td>
+      <td>${fila.ESTADO}</td>
+      <td>
+        <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#ModalMasInfo" onclick="actualizarModal(${fila.ID})">
+          <i class="bi bi-eye"></i> Mostrar todo
+        </button>
+      </td>
+      `;
+          tablaCuerpo.appendChild(tr);
+        });
+
+        actualizarUI();
+      }
+
+      async function actualizarModal(id) {
+        try {
+          const respuesta = await fetch(`http://localhost:3000/generalEspecifico?id=${id}`);
+          const datos = await respuesta.json();
+
+          if (datos.length > 0) {
+            const registro = datos[0]; // Tomamos el primer resultado
+
+            document.getElementById("modalTexto").innerHTML = `
+        <strong>ID:</strong> ${registro.ID} <br>
+        <strong>EDIFICIO:</strong> ${registro.EDIFICIO} <br>
+        <strong>DEPARTAMENTO:</strong> ${registro.DEPARTAMENTO} <br>
+        <strong>UBICACIÓN:</strong> ${registro.UBICACION} <br>
+        <strong>CATEGORÍA:</strong> ${registro.CATEGORIAS} <br>
+        <strong>SUB-CATEGORIA:</strong> ${registro.SUBCATEGORIAS} <br>
+        <strong>MATERIAL:</strong> ${registro.MATERIAL} <br>
+        <strong>DESCRIPCIÓN:</strong> ${registro.DESCRIPCION} <br>
+        <strong>MARCA:</strong> ${registro.MARCA} <br>
+        <strong>MODELO:</strong> ${registro.MODELO} <br>
+        <strong>NÚMERO DE SERIE:</strong> ${registro.NUMEROSERIE} <br>
+        <strong>NÚMERO DE INVENTARIO:</strong> ${registro.NUMEROINVENT} <br>
+        <strong>NÚMERO SIBISEP:</strong> ${registro.NUMEROSEP} <br>
+        <strong>RESGUARDANTE:</strong> ${registro.RESGUARDANTE} <br>
+        <strong>ESTADO:</strong> ${registro.ESTADO} <br>
+        <strong>NÚMERO INTERNO:</strong> ${registro.INVENTARIOINT} <br>
+        <strong>PRECIO:</strong> ${registro.PRECIO} <br>
+        <strong>SIBISEP:</strong> ${registro.SIBISEP} <br>
+      `;
+          } else {
+            document.getElementById("modalTexto").textContent = "No se encontró información.";
+          }
+        } catch (error) {
+          console.error("Error al obtener los datos:", error);
+          document.getElementById("modalTexto").textContent = "Error al cargar la información.";
+        }
+      }
+
+
+
+      function actualizarUI() {
+        const totalPaginas = Math.ceil(datos.length / elementosPorPagina);
+        document.getElementById("paginaActual").textContent = `${paginaActual} / ${totalPaginas}`;
+        document.getElementById("inputPagina").max = totalPaginas;
+        document.getElementById("inputPagina").value = paginaActual;
+      }
+
+      document.getElementById("prevPage").addEventListener("click", () => {
+        if (paginaActual > 1) {
+          paginaActual--;
+          mostrarPagina(paginaActual);
+        }
+      });
+
+      document.getElementById("nextPage").addEventListener("click", () => {
+        if (paginaActual < Math.ceil(datos.length / elementosPorPagina)) {
+          paginaActual++;
+          mostrarPagina(paginaActual);
+        }
+      });
+
+      document.getElementById("primeraPagina").addEventListener("click", () => {
+        paginaActual = 1;
+        mostrarPagina(paginaActual);
+      });
+
+      document.getElementById("ultimaPagina").addEventListener("click", () => {
+        paginaActual = Math.ceil(datos.length / elementosPorPagina);
+        mostrarPagina(paginaActual);
+      });
+
+      document.getElementById("inputPagina").addEventListener("change", (event) => {
+        const nuevaPagina = parseInt(event.target.value, 10);
+        if (nuevaPagina >= 1 && nuevaPagina <= Math.ceil(datos.length / elementosPorPagina)) {
+          paginaActual = nuevaPagina;
+          mostrarPagina(paginaActual);
+        }
+      });
+
+      cargarDatos();
+
+    </script>
 
     <div class="tablaContenido">
       <table border="1" id="tablaDatos">
@@ -108,6 +306,7 @@
             <th>Descripción</th>
             <th>Resguardante</th>
             <th>Estado</th>
+            <th>información completa</th>
           </tr>
         </thead>
         <tbody>
@@ -115,112 +314,78 @@
         </tbody>
       </table>
 
-      <script>
-        // URL de la API (backend en localhost)
-        const apiUrl = "http://localhost:3000/bienes";
+    </div>
 
 
+    <br><br>
 
-        // Función para cargar los datos
-        async function cargarDatos() {
-          try {
-            const respuesta = await fetch(apiUrl); // Solicitud a la API
-            const datos = await respuesta.json();
+  </div>
 
-            // Selecciona el cuerpo de la tabla
-            const tablaCuerpo = document.querySelector("#tablaDatos tbody");
-
-            // Crea filas dinámicas
-            datos.forEach(fila => {
-              const tr = document.createElement("tr");
-
-              const tdControlInterno = document.createElement("td");
-              tdControlInterno.textContent = fila.ControlInterno;
-
-              const tdCategoria = document.createElement("td");
-              tdCategoria.textContent = fila.Categoria;
-
-              const tdDescripcion = document.createElement("td");
-              tdDescripcion.textContent = fila.Descripcion;
-
-              const tdResguardante = document.createElement("td");
-              tdResguardante.textContent = fila.Resguardante;
-
-              const tdEstado = document.createElement("td");
-              tdEstado.textContent = fila.Estado;
-
-              tr.appendChild(tdControlInterno);
-              tr.appendChild(tdCategoria);
-              tr.appendChild(tdDescripcion);
-              tr.appendChild(tdResguardante);
-              tr.appendChild(tdEstado);
-
-              tablaCuerpo.appendChild(tr);
-            });
-          } catch (error) {
-            console.error("Error al cargar los datos:", error);
-          }
-        }
-
-        // Llama a la función al cargar la página
-        cargarDatos();
-      </script>
-
-
-</html>
-
-
-</div>
-
-<br><br>
-
-</div>
-
-<!-- Modal de bandeja de entrada-->
-<div class="modal fade" id="ModalBandeja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Envio de solicitudes</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-
-        <div class="modalBody">
-
-          <div id="message-inbox">
-
-            <div id="messages"></div>
-            <button id="clear-messages">Borrar mensajes</button>
-
-          </div>
-          <script src="src/assets/Bandeja.js"></script>
-
-          <br>
+  <!-- Modal de mostrar mas info-->
+  <div class="modal fade" id="ModalMasInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Agregado "modal-lg" para hacerlo más ancho -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Más información</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        <div class="modal-body scrollable-modal"> <!-- Clase para manejar el scroll -->
+          <p id="modalTexto"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<!-- Modal de bandeja de entrada!-->
+  <!-- Modal de mostrar mas info-->
 
-<footer>
-  <br><br>
+  <!-- Modal de bandeja de entrada-->
+  <div class="modal fade" id="ModalBandeja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Envio de solicitudes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
 
-  <div class="title">
-    <br>
-    <h5 class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS
-    </h5>
-    <h6 class="contenedor">INSTITUTO TECNOLOGICO DE TUXTEPEC
-    </h6>
-    <br>
+          <div class="modalBody">
+
+            <div id="message-inbox">
+
+              <div id="messages"></div>
+              <button id="clear-messages">Borrar mensajes</button>
+
+            </div>
+            <script src="src/assets/Bandeja.js"></script>
+
+            <br>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
   </div>
-</footer>
+  <!-- Modal de bandeja de entrada!-->
+
+  <footer>
+    <br><br>
+
+    <div class="title">
+      <br>
+      <h5 class="contenedor">SISTEMA DE GESTIÓN DE RECURSOS PARA EL ÁREA DE RECURSOS MATERIALES Y DE SERVICIOS
+      </h5>
+      <h6 class="contenedor">INSTITUTO TECNOLOGICO DE TUXTEPEC
+      </h6>
+      <br>
+    </div>
+  </footer>
 
 </body>
 
