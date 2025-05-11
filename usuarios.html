@@ -39,18 +39,26 @@
   <div class="contenedor-botones">
 
     <div class="contenedor-botones-titulo">
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const userEmail = localStorage.getItem("userEmail");
+
+          if (userEmail) {
+            document.getElementById("userEmailDisplay").textContent = userEmail;
+          } else {
+            document.getElementById("userEmailDisplay").textContent = "No se encontró un email.";
+          }
+        });
+
+      </script>
       <br>
       <h5>MENÚ DE USUARIO:</h5>
-      <h6>¡Bienvenido(a), (Nombre de usuario)!</h6>
+      <h6>¡Bienvenido(a), <span id="userEmailDisplay"></span>!</h6>
     </div>
 
     <br>
 
     <div class="contenedor-botones-opciones">
-      <button type="button" class="btn btn-dark">
-        <i class="bi bi-person-lines-fill"> Detalles de usuario</i>
-      </button>
-
       <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalSolicitud">
         <i class="bi bi-send-plus"> Solicitar cambios</i>
       </button>
@@ -83,127 +91,349 @@
     </div>
     <br>
 
+    <div class="paginacion">
+      <div class="contenedor-botones-opciones-2">
+        <button id="primeraPagina" class="btn btn-success"><i class="bi bi-skip-start-fill"></i> Primera Página</button>
+        <button id="prevPage" class="btn btn-primary"><i class="bi bi-arrow-left-short"></i> Anterior</button>
+        <div class="contenedor-paginacion">
+          <input type="number" id="inputPagina" min="1" value="1">
+          <span id="paginaActual">/</span>
+        </div>
+        <button id="nextPage" class="btn btn-primary">Siguiente <i class="bi bi-arrow-right-short"></i></button>
+        <button id="ultimaPagina" class="btn btn-success">Última Página <i class="bi bi-skip-end-fill"></i></button>
+      </div>
+    </div>
+
+    <br>
+    <div class="contenedor">
+      <h6>BUSQUEDA DE REGISTROS:</h6>
+    </div>
+
+    <div class="contenedor-busqueda">
+      <input type="text" id="busqueda" placeholder="Buscar...">
+      <button id="btnBuscar" class="btn btn-success">Buscar</button>
+      <button id="cancelarBusqueda" class="btn btn-secondary">Cancelar Búsqueda</button>
+    </div>
+
+    <script>
+      document.getElementById("btnBuscar").addEventListener("click", () => {
+        const termino = document.getElementById("busqueda").value.toLowerCase();
+        filtrarDatos(termino);
+      });
+
+      document.getElementById("cancelarBusqueda").addEventListener("click", () => {
+        document.getElementById("busqueda").value = "";
+        mostrarPagina(paginaActual); // Regresar al estado original
+      });
+
+      function filtrarDatos(termino) {
+        const tablaCuerpo = document.querySelector("#tablaDatos tbody");
+        tablaCuerpo.innerHTML = "";
+
+        const userEmailDisplay = document.getElementById("userEmailDisplay").textContent.trim().toLowerCase();
+
+        const datosFiltrados = datos.filter(fila =>
+          (fila.RESGUARDANTE.toLowerCase() === userEmailDisplay) && (
+            fila.INVENTARIOINT.toLowerCase().includes(termino) ||
+            fila.CATEGORIAS.toLowerCase().includes(termino) ||
+            fila.DESCRIPCION.toLowerCase().includes(termino) ||
+            fila.ESTADO.toLowerCase().includes(termino)
+          )
+        );
+
+        datosFiltrados.forEach(fila => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${fila.INVENTARIOINT}</td>
+            <td>${fila.CATEGORIAS}</td>
+            <td>${fila.DESCRIPCION}</td>
+            <td>${fila.RESGUARDANTE}</td>
+            <td>${fila.ESTADO}</td>
+            <td>
+                <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#ModalMasInfo" onclick="actualizarModal(${fila.ID})">
+                    <i class="bi bi-eye"></i> Mostrar todo
+                </button>
+            </td>
+        `;
+          tablaCuerpo.appendChild(tr);
+        });
+
+        actualizarUI();
+      }
+
+
+    </script>
+
+    <br>
+
+    <script>
+      const apiUrl = "http://localhost:3000/general";
+      const elementosPorPagina = 10;
+      let paginaActual = 1;
+      let datos = [];
+
+      // Carga de datos y muestra de la página (sin llamar a actualizarUI() globalmente)
+      async function cargarDatos() {
+        try {
+          const respuesta = await fetch(apiUrl);
+          datos = await respuesta.json();
+
+          // Una vez obtenidos los datos, se renderiza la página (que internamente filtra y actualiza el contador)
+          mostrarPagina(paginaActual);
+        } catch (error) {
+          console.error("Error al cargar los datos:", error);
+        }
+      }
+
+      // Función que devuelve los datos filtrados según el usuario actual
+      function getDatosFiltrados() {
+        const userEmailDisplay = document
+          .getElementById("userEmailDisplay")
+          .textContent.trim()
+          .toLowerCase();
+
+        // Se filtran los datos de acuerdo al resguardante
+        return datos.filter(fila => fila.RESGUARDANTE.toLowerCase() === userEmailDisplay);
+      }
+
+      // Función que muestra la página actual, renderiza la tabla y actualiza el contador
+      function mostrarPagina(pagina) {
+        const tablaCuerpo = document.querySelector("#tablaDatos tbody");
+        tablaCuerpo.innerHTML = ""; // Limpiar la tabla
+
+        // Usar la función que retorna los datos filtrados
+        const datosFiltrados = getDatosFiltrados();
+
+        // Calcular el total de páginas basado en la cantidad de datos filtrados
+        const totalPaginas = Math.max(1, Math.ceil(datosFiltrados.length / elementosPorPagina));
+
+        // Asegurarse de que la página actual no supere el máximo
+        paginaActual = Math.min(pagina, totalPaginas);
+
+        const inicio = (paginaActual - 1) * elementosPorPagina;
+        const fin = inicio + elementosPorPagina;
+        const datosPagina = datosFiltrados.slice(inicio, fin);
+
+        // Renderizar las filas de la tabla
+        datosPagina.forEach(fila => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+      <td>${fila.INVENTARIOINT}</td>
+      <td>${fila.CATEGORIAS}</td>
+      <td>${fila.DESCRIPCION}</td>
+      <td>${fila.RESGUARDANTE}</td>
+      <td>${fila.ESTADO}</td>
+      <td>
+          <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#ModalMasInfo" onclick="actualizarModal(${fila.ID})">
+              <i class="bi bi-eye"></i> Mostrar todo
+          </button>
+      </td>
+    `;
+          tablaCuerpo.appendChild(tr);
+        });
+
+        // Actualizar la UI (el contador) usando el total calculado
+        actualizarUI(totalPaginas);
+      }
+
+      // Función para actualizar el contador y el input de página 
+      function actualizarUI(totalPaginas) {
+        document.getElementById("paginaActual").textContent = `${paginaActual} / ${totalPaginas}`;
+        document.getElementById("inputPagina").max = totalPaginas;
+        document.getElementById("inputPagina").value = paginaActual;
+      }
+
+      // Llamadas de evento para los botones de paginación
+      document.getElementById("prevPage").addEventListener("click", () => {
+        if (paginaActual > 1) {
+          paginaActual--;
+          mostrarPagina(paginaActual);
+        }
+      });
+      document.getElementById("nextPage").addEventListener("click", () => {
+        // Se vuelve a calcular el total para evitar pasarse
+        const totalPaginas = Math.ceil(getDatosFiltrados().length / elementosPorPagina);
+        if (paginaActual < totalPaginas) {
+          paginaActual++;
+          mostrarPagina(paginaActual);
+        }
+      });
+      document.getElementById("primeraPagina").addEventListener("click", () => {
+        paginaActual = 1;
+        mostrarPagina(paginaActual);
+      });
+      document.getElementById("ultimaPagina").addEventListener("click", () => {
+        const totalPaginas = Math.ceil(getDatosFiltrados().length / elementosPorPagina);
+        paginaActual = totalPaginas;
+        mostrarPagina(paginaActual);
+      });
+      document.getElementById("inputPagina").addEventListener("change", (event) => {
+        const totalPaginas = Math.ceil(getDatosFiltrados().length / elementosPorPagina);
+        const nuevaPagina = parseInt(event.target.value, 10);
+        if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+          paginaActual = nuevaPagina;
+          mostrarPagina(paginaActual);
+        }
+      });
+
+      // Iniciar la carga de datos
+      cargarDatos();
+
+    </script>
+
     <div class="tablaContenido">
-      <table border="1">
-        <tr>
-          <th>No. ITTUX</th>
-          <th>Nombre del inmueble</th>
-          <th>Estado</th>
-          <th>Ubicación</th>
-          <th>Detalles</th>
-        </tr>
-        <tr>
-          <td>Celda 1</td>
-          <td>Celda 2</td>
-          <td>Celda 3</td>
-          <td>Celda 4</td>
-          <td>
-            <div class="tabla-mostrar">
-              <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalDetalles">
-                <i class="bi bi-eye"> Mostrar</i>
-              </button>
-            </div>
-          </td>
-        </tr>
+      <table border="1" id="tablaDatos">
+        <thead>
+          <tr>
+            <th>Control Interno</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Resguardante</th>
+            <th>Estado</th>
+            <th>información completa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se insertarán las filas dinámicamente -->
+        </tbody>
       </table>
 
-      <br><br>
-
     </div>
+
 
     <br><br>
 
   </div>
 
-  <!-- Modal de mostrar detalles del registro -->
-  <div class="modal fade" id="ModalDetalles" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  <!-- Modal de mostrar mas info-->
+  <div class="modal fade" id="ModalMasInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Agregado "modal-lg" para hacerlo más ancho -->
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Detalles del bien</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Más información</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-
-          <div class="modalBodyDetalles">
-
-            <li>
-              Nombre:
-            </li>
-            <br>
-            <li>
-              Descripción:
-            </li>
-            <br>
-            <li>
-              Edificio:
-            </li>
-            <br>
-            <li>
-              Ubicación:
-            </li>
-            <br>
-            <li>
-              No. SIBISEP:
-            </li>
-            <br>
-            <li>
-              Precio:
-            </li>
-            <br>
-            <li>
-              Resguardante:
-            </li>
-            <br>
-            <li>
-              No. de serie:
-            </li>
-            <br>
-          </div>
-
+        <div class="modal-body scrollable-modal"> <!-- Clase para manejar el scroll -->
+          <p id="modalTexto"></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
         </div>
+
       </div>
     </div>
   </div>
+  <script>
+    async function actualizarModal(id) {
+      try {
+        const respuesta = await fetch(`http://localhost:3000/generalEspecifico?id=${id}`);
+        const datosRespuesta = await respuesta.json();
 
-  <!-- Modal de mostrar detalles del registro-->
+        const modalTexto = document.getElementById("modalTexto");
 
-  <!-- Modal de envio de solicitudes -->
+        if (datosRespuesta.length > 0) {
+          const registro = datosRespuesta[0]; // Obtenemos el primer resultado
+
+          // Guardamos la ID en el modal para futuras consultas (por ejemplo, para editar o eliminar)
+          modalTexto.setAttribute("data-id", registro.ID);
+
+          // Generar el contenido de la modal iterando sobre cada clave del objeto registro
+          let contenido = "";
+          // Si quieres un orden específico, puedes definir un array con el orden deseado
+          for (const key in registro) {
+            if (registro.hasOwnProperty(key)) {
+              contenido += `<strong>${key.toUpperCase()}:</strong> ${registro[key]} <br>`;
+            }
+          }
+
+          modalTexto.innerHTML = contenido;
+        } else {
+          modalTexto.textContent = "No se encontró información.";
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+        document.getElementById("modalTexto").textContent = "Error al cargar la información.";
+      }
+    }
+
+  </script>
+  <!-- Modal de mostrar mas info-->
+
+
+
+  <!-- Modal de envío de solicitudes -->
   <div class="modal fade" id="ModalSolicitud" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Modal más ancho -->
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Envio de solicitudes</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-header text-center">
+          <h5 class="modal-title w-100">Envio de solicitudes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
-
-          <div class="modalBody">
-
-            <div id="message-system">
-              <form id="message-form">
-                <input type="text" id="message-input" placeholder="Escribe tu mensaje aquí" required>
-                <button type="submit">Enviar</button>
-              </form>
-            </div>
-            <script src="src/assets/Enviar.js"></script>
-
-            <br>
-          </div>
-
+        <div class="modal-body text-center">
+          <p><strong>Enviado por:</strong> <span id="user-name"></span></p> <!-- Mostrar el usuario -->
+          <form id="message-form">
+            <textarea id="message-input" class="form-control" rows="4" placeholder="Escribe tu mensaje aquí"
+              required></textarea> <!-- Input más grande -->
+            <button type="submit" class="btn btn-primary mt-3">
+              <i class="bi bi-send"></i> Enviar
+            </button>
+          </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Cerrar
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <!-- Modal de envio de solicitudes!-->
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Obtener el nombre del usuario y mostrarlo en el modal
+      const userName = document.getElementById("userEmailDisplay").innerText;
+      document.getElementById("user-name").innerText = userName;
+    });
+
+    document.getElementById("message-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const mensaje = document.getElementById("message-input").value;
+      const solicitante = document.getElementById("userEmailDisplay").innerText;
+
+      Swal.fire({
+        title: "¿Confirmar envío?",
+        text: "Tu solicitud será enviada.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, enviar",
+        cancelButtonText: "Cancelar"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const response = await fetch("http://localhost:3000/guardarSolicitud", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ solicitante, mensaje })
+            });
+
+            if (response.ok) {
+              Swal.fire("Enviado", "Tu solicitud ha sido enviada.", "success");
+              document.getElementById("message-input").value = ""; // Limpiar campo
+            } else {
+              Swal.fire("Error", "No se pudo enviar la solicitud.", "error");
+            }
+          } catch (error) {
+            Swal.fire("Error", "Problema de conexión.", "error");
+          }
+        }
+      });
+    });
+
+  </script>
+
 
   <footer>
     <br><br>

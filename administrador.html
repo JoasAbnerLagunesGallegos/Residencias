@@ -66,9 +66,9 @@
         <i class="bi bi-envelope-arrow-down-fill"> Bandeja de entrada</i>
       </button>
 
-      <a href="admusr.html"><button type="button" class="btn btn-dark">
-          <i class="bi bi-people-fill"> Administrar usuarios</i>
-        </button></a>
+      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalAdminUser">
+        <i class="bi bi-people-fill"> Administrar usuarios</i>
+      </button>
 
 
 
@@ -601,38 +601,336 @@
     });
   </script>
 
-  <!-- Modal de bandeja de entrada-->
-  <div class="modal fade" id="ModalBandeja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<!-- Modal de bandeja de entrada -->
+<div class="modal fade" id="ModalBandeja" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Modal más ancho -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Bandeja de solicitudes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Solicitante</th>
+                            <th style="width: 60%;">Mensaje</th> <!-- Ampliando columna -->
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="message-inbox">
+                        <!-- Aquí se insertarán los mensajes dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  async function cargarSolicitudes() {
+    try {
+        const response = await fetch("http://localhost:3000/solicitudes");
+        const solicitudes = await response.json();
+
+        const messageInbox = document.getElementById("message-inbox");
+        messageInbox.innerHTML = ""; // Limpiar la tabla antes de actualizar
+
+        solicitudes.forEach(solicitud => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${solicitud.Solicitante}</td>
+                <td>${solicitud.Mensaje}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="borrarSolicitud(${solicitud.ID})">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </td>
+            `;
+
+            messageInbox.appendChild(row);
+        });
+    } catch (error) {
+        console.error("Error al cargar solicitudes:", error);
+    }
+}
+
+// Función para eliminar un mensaje específico
+async function borrarSolicitud(id) {
+    Swal.fire({
+        title: "¿Eliminar solicitud?",
+        text: "Esta acción no se puede deshacer.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`http://localhost:3000/borrarSolicitud/${id}`, { method: "DELETE" });
+
+                if (response.ok) {
+                    Swal.fire("Eliminado", "La solicitud ha sido eliminada.", "success");
+                    cargarSolicitudes(); // Recargar lista
+                } else {
+                    Swal.fire("Error", "No se pudo eliminar la solicitud.", "error");
+                }
+            } catch (error) {
+                Swal.fire("Error", "Problema de conexión.", "error");
+            }
+        }
+    });
+}
+
+// Cargar solicitudes al abrir el modal
+document.getElementById("ModalBandeja").addEventListener("shown.bs.modal", cargarSolicitudes);
+
+</script>
+
+
+  <!-- Modal de administración de usuarios -->
+  <div class="modal fade" id="ModalAdminUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Envio de solicitudes</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title">Lista de Usuarios</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
-
-          <div class="modalBody">
-
-            <div id="message-inbox">
-
-              <div id="messages"></div>
-              <button id="clear-messages">Borrar mensajes</button>
-
-            </div>
-            <script src="src/assets/Bandeja.js"></script>
-
-            <br>
-          </div>
-
+        <div class="modal-body" style="overflow-y: auto; max-height: 400px;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Contraseña</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaUsuarios"></tbody>
+          </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ModalAgregar">
+            <i class="bi bi-plus-circle"></i> Añadir Usuario
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Cerrar
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <!-- Modal de bandeja de entrada!-->
+
+
+
+  <script>
+    const apiUsuarios = "http://localhost:3000/usuarios";
+
+    async function cargarUsuarios() {
+      try {
+        const respuesta = await fetch(apiUsuarios);
+        const usuarios = await respuesta.json();
+
+        const tablaUsuarios = document.querySelector("#tablaUsuarios");
+        tablaUsuarios.innerHTML = ""; // Limpiar contenido previo
+
+        usuarios.forEach(usuario => {
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
+                <td>${usuario.ID}</td>
+                <td>${usuario.Nombre}</td>
+                <td>${usuario.Contraseña}</td>
+                <td>
+                    <button class="btn btn-warning" onclick="editarUsuario(${usuario.ID}, '${usuario.Nombre}', '${usuario.Contraseña}')">
+                        <i class="bi bi-pencil-square"></i> Editar
+                    </button>
+                    <button class="btn btn-danger" onclick="eliminarUsuario(${usuario.ID})">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </td>
+            `;
+          tablaUsuarios.appendChild(fila);
+        });
+      } catch (error) {
+        console.error("Error al obtener los usuarios:", error);
+      }
+    }
+
+    function editarUsuario(id, nombre, contraseña) {
+      document.getElementById("editId").value = id;
+      document.getElementById("editNombre").value = nombre;
+      document.getElementById("editContraseña").value = contraseña;
+      new bootstrap.Modal(document.getElementById("ModalEditar")).show();
+    }
+
+    async function guardarEdicion() {
+      const id = document.getElementById("editId").value;
+      const nombre = document.getElementById("editNombre").value;
+      const contrasena = document.getElementById("editContraseña").value;
+
+      try {
+        const respuesta = await fetch(`http://localhost:3000/usuarios/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, contrasena })
+        });
+
+        if (respuesta.ok) {
+          Swal.fire("Éxito", "Usuario actualizado correctamente", "success").then(() => {
+            cerrarModal("ModalEditar");
+            cargarUsuarios(); // Recargar lista de usuarios
+            new bootstrap.Modal(document.getElementById("ModalAdminUser")).show(); // Volver a mostrar el modal principal
+          });
+        } else {
+          Swal.fire("Error", "No se pudo actualizar el usuario", "error");
+        }
+      } catch (error) {
+        console.error("Error al actualizar usuario:", error);
+      }
+    }
+
+
+
+    async function eliminarUsuario(id) {
+      Swal.fire({
+        title: "¿Eliminar usuario?",
+        text: "Esta acción no se puede deshacer",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const respuesta = await fetch(`http://localhost:3000/usuarios/${id}`, { method: "DELETE" });
+
+            if (respuesta.ok) {
+              Swal.fire("Eliminado!", "El usuario ha sido eliminado.", "success");
+              cargarUsuarios();
+            } else {
+              Swal.fire("Error", "No se pudo eliminar el usuario", "error");
+            }
+          } catch (error) {
+            console.error("Error al eliminar usuario:", error);
+          }
+        }
+      });
+    }
+
+
+    async function agregarUsuario() {
+      const nombre = document.getElementById("addNombre").value;
+      const contrasena = document.getElementById("addContraseña").value;
+
+      try {
+        const respuesta = await fetch("http://localhost:3000/usuarios", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, contrasena })
+        });
+
+        if (respuesta.ok) {
+          Swal.fire("Éxito", "Usuario añadido correctamente", "success").then(() => {
+            cerrarModal("ModalAgregar");
+            cargarUsuarios(); // Recargar la lista
+            new bootstrap.Modal(document.getElementById("ModalAdminUser")).show(); // Volver a mostrar el modal principal
+          });
+        } else {
+          Swal.fire("Error", "No se pudo añadir el usuario", "error");
+        }
+      } catch (error) {
+        console.error("Error al añadir usuario:", error);
+      }
+    }
+
+
+    function cerrarModal(idModal) {
+      const modalElement = document.getElementById(idModal);
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      if (modalInstance) modalInstance.hide();
+    }
+
+
+    function editarUsuario(id, nombre, contraseña) {
+      cerrarModal("ModalAdminUser"); // Oculta el modal principal
+      document.getElementById("editId").value = id;
+      document.getElementById("editNombre").value = nombre;
+      document.getElementById("editContraseña").value = contraseña;
+      new bootstrap.Modal(document.getElementById("ModalEditar")).show();
+    }
+
+    // Cargar usuarios al abrir el modal
+    document.getElementById("ModalAdminUser").addEventListener("shown.bs.modal", cargarUsuarios);
+
+  </script>
+
+  <!-- Modal para editar usuario -->
+  <div class="modal fade" id="ModalEditar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ModalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editId">
+          <div class="mb-3">
+            <label for="editNombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="editNombre">
+          </div>
+          <div class="mb-3">
+            <label for="editContraseña" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="editContraseña">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Cerrar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="guardarEdicion()">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="ModalAgregar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ModalAgregarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Añadir Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="addNombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="addNombre">
+          </div>
+          <div class="mb-3">
+            <label for="addContraseña" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="addContraseña">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Cerrar
+          </button>
+          <button type="button" class="btn btn-success" onclick="agregarUsuario()">Agregar Usuario</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
   <!-- Modal de registros -->
   <div class="modal fade" id="ModalRegistros" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -730,34 +1028,34 @@
     });
 
     function editarPendiente(id) {
-    fetch(`http://localhost:3000/obtener-pendiente/${id}`)
+      fetch(`http://localhost:3000/obtener-pendiente/${id}`)
         .then(response => response.json())
         .then(registro => {
-            // Asignar valores a los inputs del formulario de edición
-            document.getElementById("editarPendienteID").value = registro.ID;
-            document.getElementById("editarPendienteEdificio").value = registro.EDIFICIO;
-            document.getElementById("editarPendienteDepartamento").value = registro.DEPARTAMENTO;
-            document.getElementById("editarPendienteUbicacion").value = registro.UBICACION;
-            document.getElementById("editarPendienteCategoria").value = registro.CATEGORIAS;
-            document.getElementById("editarPendienteSubcategoria").value = registro.SUBCATEGORIA;
-            document.getElementById("editarPendienteMaterial").value = registro.MATERIAL;
-            document.getElementById("editarPendienteDescripcion").value = registro.DESCRIPCION;
-            document.getElementById("editarPendienteMarca").value = registro.MARCA;
-            document.getElementById("editarPendienteModelo").value = registro.MODELO;
-            document.getElementById("editarPendienteNumeroSerie").value = registro.NUMEROSERIE;
-            document.getElementById("editarPendienteNumeroInvent").value = registro.NUMEROINVENT;
-            document.getElementById("editarPendienteNumeroSEP").value = registro.NUMEROSEP;
-            document.getElementById("editarPendienteEstado").value = registro.ESTADO;
-            document.getElementById("editarPendienteResguardante").value = registro.RESGUARDANTE;
-            document.getElementById("editarPendienteInventarioInt").value = registro.INVENTARIOINT;
-            document.getElementById("editarPendientePrecio").value = registro.PRECIO;
-            document.getElementById("editarPendienteSibisep").value = registro.SIBISEP;
+          // Asignar valores a los inputs del formulario de edición
+          document.getElementById("editarPendienteID").value = registro.ID;
+          document.getElementById("editarPendienteEdificio").value = registro.EDIFICIO;
+          document.getElementById("editarPendienteDepartamento").value = registro.DEPARTAMENTO;
+          document.getElementById("editarPendienteUbicacion").value = registro.UBICACION;
+          document.getElementById("editarPendienteCategoria").value = registro.CATEGORIAS;
+          document.getElementById("editarPendienteSubcategoria").value = registro.SUBCATEGORIA;
+          document.getElementById("editarPendienteMaterial").value = registro.MATERIAL;
+          document.getElementById("editarPendienteDescripcion").value = registro.DESCRIPCION;
+          document.getElementById("editarPendienteMarca").value = registro.MARCA;
+          document.getElementById("editarPendienteModelo").value = registro.MODELO;
+          document.getElementById("editarPendienteNumeroSerie").value = registro.NUMEROSERIE;
+          document.getElementById("editarPendienteNumeroInvent").value = registro.NUMEROINVENT;
+          document.getElementById("editarPendienteNumeroSEP").value = registro.NUMEROSEP;
+          document.getElementById("editarPendienteEstado").value = registro.ESTADO;
+          document.getElementById("editarPendienteResguardante").value = registro.RESGUARDANTE;
+          document.getElementById("editarPendienteInventarioInt").value = registro.INVENTARIOINT;
+          document.getElementById("editarPendientePrecio").value = registro.PRECIO;
+          document.getElementById("editarPendienteSibisep").value = registro.SIBISEP;
 
-            // Abrir el modal de edición con los datos cargados
-            new bootstrap.Modal(document.getElementById("ModalEditarPendiente")).show();
+          // Abrir el modal de edición con los datos cargados
+          new bootstrap.Modal(document.getElementById("ModalEditarPendiente")).show();
         })
         .catch(error => console.error("Error al obtener el registro:", error));
-}
+    }
 
 
     function eliminarPendiente(id) {
@@ -837,71 +1135,97 @@
             <input type="hidden" id="editarPendienteID">
 
             <div class="input-group input-group-sm mb-3">
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">EDIFICIO</span>
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">EDIFICIO</span>
               <input type="text" class="form-control me-3 w-60" id="editarPendienteEdificio" placeholder="Ej: A">
 
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">DEPARTAMENTO</span>
-              <input type="text" class="form-control me-3 w-60" id="editarPendienteDepartamento" placeholder="Ej: DIVISION DE ESTUDIOS PROFESIONALES">
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">DEPARTAMENTO</span>
+              <input type="text" class="form-control me-3 w-60" id="editarPendienteDepartamento"
+                placeholder="Ej: DIVISION DE ESTUDIOS PROFESIONALES">
 
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">UBICACION</span>
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">UBICACION</span>
               <input type="text" class="form-control me-3 w-60" id="editarPendienteUbicacion" placeholder="Ej: PASILLO">
             </div>
 
             <div class="input-group input-group-sm mb-3">
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">CATEGORIA</span>
-              <input type="text" class="form-control me-3 w-60" id="editarPendienteCategoria" placeholder="Ej: COMPUTADORA">
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">CATEGORIA</span>
+              <input type="text" class="form-control me-3 w-60" id="editarPendienteCategoria"
+                placeholder="Ej: COMPUTADORA">
 
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">SUBCATEGORIA</span>
-              <input type="text" class="form-control me-3 w-60" id="editarPendienteSubcategoria" placeholder="Ej: SERVIDOR ETHERNET">
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">SUBCATEGORIA</span>
+              <input type="text" class="form-control me-3 w-60" id="editarPendienteSubcategoria"
+                placeholder="Ej: SERVIDOR ETHERNET">
 
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">MATERIAL</span>
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">MATERIAL</span>
               <input type="text" class="form-control me-3 w-60" id="editarPendienteMaterial" placeholder="Ej: METAL">
             </div>
 
             <div class="input-group mb-3">
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">DESCRIPCION</span>
-              <textarea class="form-control me-3" id="editarPendienteDescripcion" placeholder="ESCRIBE AQUI LA DESCRIPCION DEL INMUEBLE"></textarea>
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">DESCRIPCION</span>
+              <textarea class="form-control me-3" id="editarPendienteDescripcion"
+                placeholder="ESCRIBE AQUI LA DESCRIPCION DEL INMUEBLE"></textarea>
             </div>
 
             <div class="input-group input-group-sm mb-3">
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">MARCA</span>
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">MARCA</span>
               <input type="text" class="form-control me-3 w-60" id="editarPendienteMarca" placeholder="Ej: HP">
 
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">MODELO</span>
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">MODELO</span>
               <input type="text" class="form-control me-3 w-60" id="editarPendienteModelo" placeholder="Ej: V193b">
 
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">NO. SERIE</span>
-              <input type="text" class="form-control me-3 w-60" id="editarPendienteNumeroSerie" placeholder="Ej: 3CQ54617YH">
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">NO. SERIE</span>
+              <input type="text" class="form-control me-3 w-60" id="editarPendienteNumeroSerie"
+                placeholder="Ej: 3CQ54617YH">
             </div>
 
             <div class="input-group input-group-sm mb-3">
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">NO. INVENT</span>
-              <input type="text" class="form-control me-3 w-60" id="editarPendienteNumeroInvent" placeholder="Ej: 116120079I5110100090972000023">
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">NO. INVENT</span>
+              <input type="text" class="form-control me-3 w-60" id="editarPendienteNumeroInvent"
+                placeholder="Ej: 116120079I5110100090972000023">
 
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">NO. SEP</span>
-              <input type="text" class="form-control me-3 w-60" id="editarPendienteNumeroSEP" placeholder="Ej: 11832325">
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">NO. SEP</span>
+              <input type="text" class="form-control me-3 w-60" id="editarPendienteNumeroSEP"
+                placeholder="Ej: 11832325">
             </div>
 
             <div class="input-group mb-3">
-              <label class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">ESTADO</label>
+              <label class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">ESTADO</label>
               <select class="form-select me-3" id="editarPendienteEstado">
                 <option selected>N/A</option>
                 <option value="BUEN ESTADO">BUEN ESTADO</option>
                 <option value="MAL ESTADO">MAL ESTADO</option>
               </select>
 
-              <span class="input-group-text" style="width: 145px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">RESGUARDO</span>
-              <input type="text" class="form-control me-3 w-60" id="editarPendienteResguardante" placeholder="EJ: PERSONA RESPONSABLE">
+              <span class="input-group-text"
+                style="width: 145px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">RESGUARDO</span>
+              <input type="text" class="form-control me-3 w-60" id="editarPendienteResguardante"
+                placeholder="EJ: PERSONA RESPONSABLE">
             </div>
 
             <div class="input-group input-group-sm mb-3">
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">NO. ITTUX</span>
-              <input type="text" class="form-control me-3 w-60" id="editarPendienteInventarioInt" placeholder="Ej: ITT00001">
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">NO. ITTUX</span>
+              <input type="text" class="form-control me-3 w-60" id="editarPendienteInventarioInt"
+                placeholder="Ej: ITT00001">
 
-              <span class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">PRECIO</span>
+              <span class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">PRECIO</span>
               <input type="text" class="form-control me-3 w-60" id="editarPendientePrecio" placeholder="Ej: $ 2500">
 
-              <label class="input-group-text" style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">SIBISEP</label>
+              <label class="input-group-text"
+                style="width: 120px; color: rgb(0, 0, 0); background-color: rgb(218, 188, 18);">SIBISEP</label>
               <select class="form-select me-3" id="editarPendienteSibisep">
                 <option selected>N/A</option>
                 <option value="SI">SI</option>
@@ -920,13 +1244,13 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("ModalEditarPendiente").addEventListener("hidden.bs.modal", function () {
+      document.getElementById("ModalEditarPendiente").addEventListener("hidden.bs.modal", function () {
         document.querySelectorAll(".modal-backdrop").forEach(el => el.remove()); // Elimina backdrop sobrante
+      });
     });
-});
 
     document.getElementById("btnGuardarEdicionPendiente").addEventListener("click", function () {
-    const pendienteEditado = {
+      const pendienteEditado = {
         ID: document.getElementById("editarPendienteID").value,
         EDIFICIO: document.getElementById("editarPendienteEdificio").value,
         DEPARTAMENTO: document.getElementById("editarPendienteDepartamento").value,
@@ -945,9 +1269,9 @@
         INVENTARIOINT: document.getElementById("editarPendienteInventarioInt").value,
         PRECIO: document.getElementById("editarPendientePrecio").value,
         SIBISEP: document.getElementById("editarPendienteSibisep").value
-    };
+      };
 
-    Swal.fire({
+      Swal.fire({
         title: "¿Confirmas la edición del registro?",
         text: "Se guardarán los cambios realizados.",
         icon: "question",
@@ -956,37 +1280,37 @@
         cancelButtonColor: "#d33",
         confirmButtonText: "Sí, guardar cambios",
         cancelButtonText: "Cancelar"
-    }).then((result) => {
+      }).then((result) => {
         if (result.isConfirmed) {
-            fetch("http://localhost:3000/editar-pendiente", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(pendienteEditado)
-            })
+          fetch("http://localhost:3000/editar-pendiente", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(pendienteEditado)
+          })
             .then(response => response.json())
             .then(data => {
-                Swal.fire({
-                    icon: "success",
-                    title: "Registro Actualizado",
-                    text: "Los cambios se guardaron correctamente.",
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "OK"
-                }).then(() => {
-                    location.reload(); // Recargar la lista de pendientes
-                });
+              Swal.fire({
+                icon: "success",
+                title: "Registro Actualizado",
+                text: "Los cambios se guardaron correctamente.",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "OK"
+              }).then(() => {
+                location.reload(); // Recargar la lista de pendientes
+              });
             })
             .catch(error => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "Hubo un problema al actualizar el registro.",
-                    confirmButtonColor: "#d33",
-                    confirmButtonText: "Cerrar"
-                });
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Hubo un problema al actualizar el registro.",
+                confirmButtonColor: "#d33",
+                confirmButtonText: "Cerrar"
+              });
             });
         }
+      });
     });
-});
 
   </script>
 

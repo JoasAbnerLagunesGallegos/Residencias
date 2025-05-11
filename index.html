@@ -79,11 +79,11 @@
             <i class="bi bi-person-fill icon-100"></i>
 
             <div class="form-floating mb-3">
-              <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+              <input type="email" class="form-control" id="userEmail" placeholder="name@example.com">
               <label for="floatingInput">Nombre de usuario</label>
             </div>
             <div class="form-floating">
-              <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+              <input type="password" class="form-control" id="userPassword" placeholder="Password">
               <label for="floatingPassword">Contraseña</label>
             </div>
 
@@ -92,11 +92,46 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <a href="usuarios.html"><button type="button" class="btn btn-primary">Continuar</button></a>
+          <button type="button" class="btn btn-primary" id="userLoginBtn">Continuar</button>
         </div>
       </div>
     </div>
   </div>
+  <script>
+    document.getElementById("userLoginBtn").addEventListener("click", async () => {
+      const Email = document.getElementById("userEmail").value;
+      const Contraseña = document.getElementById("userPassword").value;
+
+      try {
+        const respuesta = await fetch("http://localhost:3000/user-login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ Email, Contraseña })
+        });
+
+        if (respuesta.ok) {
+          localStorage.setItem("userEmail", Email);
+          window.location.href = "usuarios.html"; // Redirige a la página de administrador
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "¡Error de inicio de sesión!",
+            text: "Los datos proporcionados son incorrectos",
+          });
+        }
+      } catch (error) {
+        console.error("Error al intentar iniciar sesión:", error);
+        Swal.fire({
+          icon: "error",
+          title: "¡Error de inicio de sesión!",
+          text: "Error en al acceder al servidor",
+        });
+      }
+    });
+
+  </script>
   <!-- Modal de inicio de sesión de usuario -->
 
   <!-- Modal de inicio de sesión de administrador -->
