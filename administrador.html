@@ -66,8 +66,8 @@
         <i class="bi bi-envelope-arrow-down-fill"> Bandeja de entrada</i>
       </button>
 
-      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalAdminUser">
-        <i class="bi bi-people-fill"> Administrar usuarios</i>
+      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#ModalPersonal">
+        <i class="bi bi-people-fill"> Administrar personal</i>
       </button>
 
 
@@ -694,6 +694,288 @@ document.getElementById("ModalBandeja").addEventListener("shown.bs.modal", carga
 
 </script>
 
+
+
+<!-- Modal de edicion de personal -->
+  <div class="modal fade" id="ModalPersonal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Administración de personal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="contenedor-botones-centro">
+
+            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#ModalAdminAdmin">
+              <i class="bi bi-person-badge icon-100"></i>
+              <p>ADMIN</p>
+            </button>
+
+            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+              data-bs-target="#ModalAdminUser">
+              <i class="bi bi-people-fill icon-100"></i>
+              <p>USUARIOS</p>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal de administración de usuarios -->
+  <div class="modal fade" id="ModalAdminAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Lista de administradores</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" style="overflow-y: auto; max-height: 400px;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Contraseña</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaAdministradores"></tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ModalAgregarAdmin">
+            <i class="bi bi-plus-circle"></i> Añadir Admin
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    const apiAdministradores = "http://localhost:3000/administradores";
+
+    async function cargarAdministradores() {
+      try {
+        const respuesta = await fetch(apiAdministradores);
+        const Administradores = await respuesta.json();
+
+        const tablaAdministradores = document.querySelector("#tablaAdministradores");
+        tablaAdministradores.innerHTML = ""; // Limpiar contenido previo
+
+        Administradores.forEach(admin => {
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
+                <td>${admin.ID}</td>
+                <td>${admin.Nombre}</td>
+                <td>${admin.Contraseña}</td>
+                <td>
+                    <button class="btn btn-warning" onclick="editarAdministrador(${admin.ID}, '${admin.Nombre}', '${admin.Contraseña}')">
+                        <i class="bi bi-pencil-square"></i> Editar
+                    </button>
+                    <button class="btn btn-danger" onclick="eliminarAdministrador(${admin.ID})">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </td>
+            `;
+          tablaAdministradores.appendChild(fila);
+        });
+      } catch (error) {
+        console.error("Error al obtener los usuarios:", error);
+      }
+    }
+
+    function editarAdministrador(id, nombre, contraseña) {
+      document.getElementById("editAdminId").value = id;
+      document.getElementById("editAdminNombre").value = nombre;
+      document.getElementById("editAdminContraseña").value = contraseña;
+      new bootstrap.Modal(document.getElementById("ModalEditarAdmin")).show();
+    }
+
+    async function guardarEdicionAdmin() {
+      const id = document.getElementById("editAdminId").value;
+      const nombre = document.getElementById("editAdminNombre").value;
+      const contrasena = document.getElementById("editAdminContraseña").value;
+
+      try {
+        const respuesta = await fetch(`http://localhost:3000/administradores/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, contrasena })
+        });
+
+        if (respuesta.ok) {
+          Swal.fire("Éxito", "Administrador actualizado correctamente", "success").then(() => {
+            cerrarModal("ModalEditarAdmin");
+            cargarUsuarios(); // Recargar lista de usuarios
+            new bootstrap.Modal(document.getElementById("ModalAdminAdmin")).show(); // Volver a mostrar el modal principal
+          });
+        } else {
+          Swal.fire("Error", "No se pudo actualizar el usuario", "error");
+        }
+      } catch (error) {
+        console.error("Error al actualizar Administrador:", error);
+      }
+    }
+
+
+
+    async function eliminarAdministrador(id) {
+  // Obtener la lista de administradores antes de eliminar
+  try {
+    const administradoresResp = await fetch("http://localhost:3000/administradores");
+    const administradores = await administradoresResp.json();
+
+    if (administradores.length <= 1) {
+      Swal.fire("Error", "No puedes eliminar el último administrador.", "error");
+      return;
+    }
+
+    Swal.fire({
+      title: "¿Eliminar Administrador?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const respuesta = await fetch(`http://localhost:3000/administradores/${id}`, { method: "DELETE" });
+
+          if (respuesta.ok) {
+            Swal.fire("Eliminado!", "El administrador ha sido eliminado.", "success");
+            cargarAdministradores();
+          } else {
+            Swal.fire("Error", "No se pudo eliminar el usuario", "error");
+          }
+        } catch (error) {
+          console.error("Error al eliminar usuario:", error);
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error("Error al obtener administradores:", error);
+  }
+}
+
+
+
+    async function agregarAdministrador() {
+      const nombre = document.getElementById("addAdminNombre").value;
+      const contrasena = document.getElementById("addAdminContraseña").value;
+
+      try {
+        const respuesta = await fetch("http://localhost:3000/administradores", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre, contrasena })
+        });
+
+        if (respuesta.ok) {
+          Swal.fire("Éxito", "Administrador añadido correctamente", "success").then(() => {
+            cerrarModal("ModalAgregarAdmin");
+            cargarUsuarios(); // Recargar la lista
+            new bootstrap.Modal(document.getElementById("ModalAdminAdmin")).show(); // Volver a mostrar el modal principal
+          });
+        } else {
+          Swal.fire("Error", "No se pudo añadir el usuario", "error");
+        }
+      } catch (error) {
+        console.error("Error al añadir usuario:", error);
+      }
+    }
+
+
+    function cerrarModal(idModal) {
+      const modalElement = document.getElementById(idModal);
+      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+      if (modalInstance) modalInstance.hide();
+    }
+
+
+    function editarAdministrador(id, nombre, contraseña) {
+      cerrarModal("ModalAdminAdmin"); // Oculta el modal principal
+      document.getElementById("editAdminId").value = id;
+      document.getElementById("editAdminNombre").value = nombre;
+      document.getElementById("editAdminContraseña").value = contraseña;
+      new bootstrap.Modal(document.getElementById("ModalEditarAdmin")).show();
+    }
+
+    // Cargar usuarios al abrir el modal
+    document.getElementById("ModalAdminAdmin").addEventListener("shown.bs.modal", cargarAdministradores);
+
+  </script>
+
+  <!-- Modal para editar usuario -->
+  <div class="modal fade" id="ModalEditarAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ModalEditarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Administrador</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editAdminId">
+          <div class="mb-3">
+            <label for="editAdminNombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="editAdminNombre">
+          </div>
+          <div class="mb-3">
+            <label for="editAdminContraseña" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="editAdminContraseña">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Cerrar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="guardarEdicionAdmin()">Guardar Cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="ModalAgregarAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ModalAgregarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Añadir Administrador</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="addAdminNombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="addAdminNombre">
+          </div>
+          <div class="mb-3">
+            <label for="addAdminContraseña" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="addAdminContraseña">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Cerrar
+          </button>
+          <button type="button" class="btn btn-success" onclick="agregarAdministrador()">Agregar Administrador</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal de administración de usuarios -->
   <div class="modal fade" id="ModalAdminUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

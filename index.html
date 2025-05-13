@@ -202,34 +202,229 @@
   <!-- Modal de inicio de sesión de administrador -->
 
 
-  <!-- Modal de guia de usuario -->
+  <!-- Modal de guía de usuario mejorado -->
   <div class="modal fade" id="ModalGuide" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Guía de usuario</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <div class="modalBody" style="max-height: 300px; overflow-y: auto; min-height: 300px; overflow-y: auto;">
 
-          <div class="modalBody">
+            <div id="userGuidePages">
+              <div class="page" id="page1">
+                <i class="bi bi-book icon-100"></i> <br> <br> <br>
+                <h5>¡Bienvenido al manual de uso del sistema de gestión!</h5>
+                <p>Aquí podrás explorar las diversas funciones que este sistema ofrece tanto para administradores como
+                  para usuarios.</p>
+              </div>
 
-            <i class="bi bi-book icon-100"></i>
+              <div class="page" id="page2" style="display: none;">
+                <h5>1.0 Menú principal</h5> <br>
+                <img src="public/Manual/01-MenuPrincipal.png" height="120 px" width="250 px"> <br> <br>
+                <p>El menú principal desplegará tres botones para interactuar, los cuales sirven para iniciar sesion
+                  como usuario, como administrador y para abrir este menú de ayuda.</p> <br> <br> <br> <br>
+                <h5>1.1 Menú de inicio de sesión de usuario</h5> <br>
+                <img src="public/Manual/02-SesionUsuario.png" height="400 px" width="400 px"> <br> <br>
+                <p>Como usuario dependes de ponerte en contacto con los administradores del área de recursos materiales
+                  y servicios para obtener tu informacion de inicio de sesión.</p> <br> <br> <br>
+                <h5>1.2 Menú de inicio de sesión de administrador</h5> <br>
+                <img src="public/Manual/03-SesionAdmin.png" height="400 px" width="400 px"> <br> <br>
+                <p>Como administrador cuentas con acceso completo a los registros de la base de datos. De no conocer los
+                  datos de inicio de sesión ponte en contacto con previos administradores del sistema de gestión.</p>
+                <br>
+              </div>
 
-            <div>AQUI ESTARA LA GUIA DE USUARIO</div>
+              <div class="page" id="page3" style="display: none;">
+                <h5>2.0 Página de usuario</h5> <br>
+                <img src="public/Manual/04-PaginaUsuario.png" height="200 px" width="600 px"> <br> <br>
+                <p>Al iniciar sesión como usuario ingresaras a la siguiente página, la cual mostrará las siguientes
+                  opciones y tendras un accesso limitado a la información, pudiendo solo ver los inmuebles que tienes
+                  asignados como usuario y solicitar cambios por medio de mensajes</p> <br> <br> <br> <br>
+                <h5>2.1 Botón de envio de solicitud</h5> <br>
+                <img src="public/Manual/05-BtnSolicitud.png" height="50 px" width="200 px"> <br> <br>
+                <p>El siguiente botón te permitirá ingresar a la interfaz de envio de solicitud de cambio.</p> <br> <br>
+                <br> <br>
+                <h5>2.2 Interfaz de envio de solicitud</h5> <br>
+                <img src="public/Manual/06-EnviarSolicitud.png" height="200 px" width="600 px"> <br> <br>
+                <p>En esta interfaz serás capaz de ingresar un mensaje para enviarlo a los administradores para que
+                  tomen en cuenta tus solicitudes, el remitente del mensaje se llenará en automático con tu nombre de
+                  usuario.</p> <br>
+              </div>
+
+              <div class="page" id="page4" style="display: none;">
+                <h5>3.0 Registros de inmuebles del usuario</h5> <br>
+                <img src="public/Manual/09-RegistrosUsuario.png" height="250 px" width="600 px"> <br> <br>
+                <p>Como usuario podrás ver los inmuebles que tienes asignados por los administradores del sistema</p>
+                <br> <br> <br> <br>
+                <h5>3.1 Botón de mostrar más</h5> <br>
+                <img src="public/Manual/10-BtnMostrar.png" height="50 px" width="200 px"> <br> <br>
+                <p>El siguiente botón te permitirá desplegar un menú donde podrás ver toda la información del inmuble.
+                </p> <br> <br>
+                <br> <br>
+                <h5>3.2 Interfaz de más información</h5> <br>
+                <img src="public/Manual/11-MostarMasUsuario.png" height="250 px" width="600 px"> <br> <br>
+                <p>En esta interfaz serás capaz de ver toda la información relacionada con el inmueble seleccionado,
+                  pero solo tienes permisos de lectura como usuario, cualquier discrepancia favor de reportarla por
+                  medio de la interfaz de envio de solicitud (2.2)</p> <br>
+              </div>
+
+              <div class="page" id="page5" style="display: none;">
+                <h5>4.0 Página de administrador</h5> <br>
+                <img src="public/Manual/12-PaginaAdmin.png" height="250 px" width="600 px"> <br> <br>
+                <p>Como administrador podrás ver todos los inmuebles en el sistema, así como editarlos, eliminarlos y
+                  crear nuevos registros. También estarás a cargo de gestionar usuarios y otros administradores</p>
+                <br> <br> <br> <br>
+                <h5>4.1 Botón de añadir registro</h5> <br>
+                <img src="public/Manual/13-BtnAñadirRegistro.png" height="50 px" width="200 px"> <br> <br>
+                <p>El siguiente botón te permitirá desplegar un menú donde podrás añadir un nuevo registro.
+                </p> <br> <br>
+                <br> <br>
+                <h5>4.2 Interfaz de seleccion de añadir registro</h5> <br>
+                <img src="public/Manual/14-SelectorAñadirRegistro.png" height="250 px" width="350 px"> <br> <br>
+                <p>En esta interfaz serás capaz de seleccionar entre ver tus registros pendientes o crear uno nuevo
+                  desde cero</p> <br>
+              </div>
+
+              <div class="page" id="page6" style="display: none;">
+                <h5>5.0 Registros pendientes</h5> <br>
+                <img src="public/Manual/15-RegistrosPendientes.png" height="200 px" width="600 px"> <br> <br>
+                <p>Con el siguiente menú podrás gestionar los registros que tengas pendientes, los mismos pueden ser
+                  editados, eliminados o aprobados por cualquier administrador.</p>
+                <br> <br> <br> <br>
+                <h5>5.1 Interfaz de añadir registro</h5> <br>
+                <img src="public/Manual/16-AñadirRegistro.png" height="350 px" width="600 px"> <br> <br>
+                <p>Con el siguiente menú puedes ingresar los datos del nuevo registro, cada campo cuenta con un mensaje
+                  de ejemplo del tipo de dato que se espera recibir
+                </p> <br> <br>
+                <br> <br>
+                <h5>5.2 Botón de bandeja de entrada</h5> <br>
+                <img src="public/Manual/17-BandejaEntrada.png" height="50 px" width="200 px"> <br> <br>
+                <p>Con el siguiente botón podrás abrir la bandeja de entrada del sistema.
+                </p> <br> <br> <br>
+                <h5>5.3 Interfaz de bandeja de ntrada</h5> <br>
+                <img src="public/Manual/18-BandejaEntrada.png" height="150 px" width="600 px"> <br> <br>
+                <p>En el siguiente menú aparecerán los mensajes que los usuarios te han mandado para que tú, como
+                  administrador, consideres los cambios y hagas ediciones en los registros.</p>
+                <br>
+              </div>
+
+              <div class="page" id="page7" style="display: none;">
+                <h5>6.0 Botón de gestión de personal</h5> <br>
+                <img src="public/Manual/19-BtnPersonal.png" height="50 px" width="200 px"> <br> <br>
+                <p>Con el siguiente botón podrás abrir lel menú de selección de gestión de personal.</p>
+                <br> <br> <br> <br>
+                <h5>6.1 Selector de gestión de personal</h5> <br>
+                <img src="public/Manual/20-SelectorPersonal.png" height="250 px" width="350 px"> <br> <br>
+                <p>Con el siguiente menú puedes seleccionar entre gestionar administradores o usuarios del sistema.
+                </p> <br> <br>
+                <br> <br>
+                <h5>6.2 Menú de gestión de administradores</h5> <br>
+                <img src="public/Manual/21-PersonalAdmin.png" height="150 px" width="600 px"> <br> <br>
+                <p>Con el siguiente menú podrás editar, eliminar y añadir nuevos administradores. (La contraseña se
+                  encuentra censurada por privacidad, así mismo el sistema no te permitirá eliminar un administrador si
+                  es el unico registro existente)
+                </p> <br> <br> <br>
+                <h5>6.3 Menú de gestión de usuarios</h5> <br>
+                <img src="public/Manual/22-PersonalUsuario.png" height="350 px" width="600 px"> <br> <br>
+                <p>Con el siguiente menú podrás editar, eliminar y añadir nuevos usuarios. (La contraseña se
+                  encuentra censurada por privacidad)</p>
+                <br>
+              </div>
+
+              <div class="page" id="page8" style="display: none;">
+                <h5>7.0 Registros de inmuebles del administrador</h5> <br>
+                <img src="public/Manual/25-RegistrosAdmin.png" height="250 px" width="600 px"> <br> <br>
+                <p>Como administrador podrás ver todos los inmuebles que están asignados en el sistema</p>
+                <br> <br> <br> <br>
+                <h5>7.1 Botón de mostrar más</h5> <br>
+                <img src="public/Manual/10-BtnMostrar.png" height="50 px" width="200 px"> <br> <br>
+                <p>El siguiente botón te permitirá desplegar un menú donde podrás ver toda la información del inmuble.
+                </p> <br> <br>
+                <br> <br>
+                <h5>7.2 Interfaz de más información</h5> <br>
+                <img src="public/Manual/23-MostrarMasAdmin.png" height="250 px" width="600 px"> <br> <br>
+                <p>En esta interfaz serás capaz de ver toda la información relacionada con el inmueble seleccionado,
+                  así mismo como administrador tienes accesso al menú de edición del registro</p> <br> <br> <br> <br>
+                <h5>7.3 Menú de edición del registro</h5> <br>
+                <img src="public/Manual/24-CambiarRegistro.png" height="350 px" width="600 px"> <br> <br>
+                <p>Con el siguiente menú puedes ingresar los datos que desas editar del registro, cada campo cuenta con
+                  un mensaje
+                  de ejemplo del tipo de dato que se espera recibir y los campos se autorellenaran con los datos
+                  actuales.
+                </p> <br>
+              </div>
+
+              <div class="page" id="page9" style="display: none;">
+                <h5>8.0 Paginación de registros</h5> <br>
+                <img src="public/Manual/07-Paginacion.png" height="150 px" width="600 px"> <br> <br>
+                <p>En ambas páginas, de administrador y de usuario contarás con un menú de paginación el cual te ayudara
+                  navegar los registros, es posible cambiar de página usando los botones de navegación o escribiendo el
+                  número deseado y haciendo enter.</p>
+                <br> <br> <br> <br>
+                <h5>8.1 Barra de búsqueda de registros</h5> <br>
+                <img src="public/Manual/08-Buscador.png" height="100 px" width="600 px"> <br> <br>
+                <p>En ambas páginas, de administrador y de usuario contarás con una barra de búsqueda para los
+                  registros, la misma filtrara los datos mostrados de forma general sin importar en que campo este el
+                  dato a buscar, por ejemplo si escribes silla te mostrará todos los registros donde esta palabra
+                  exista.
+                </p> <br>
+              </div>
+            </div>
 
           </div>
-
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary">Continuar</button>
+        <div class="modal-footer d-flex justify-content-between">
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-secondary flex-grow-1" onclick="prevPage()">
+              <i class="bi bi-arrow-left"></i> Página previa
+            </button>
+            <button type="button" class="btn btn-primary flex-grow-1" onclick="nextPage()">
+              Página siguiente <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+          <span id="pageCounter" class="fw-bold">1 / 4</span> <!-- Contador de páginas -->
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            <i class="bi bi-x-lg"></i> Salir
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <!-- Modal de guia de usuario -->
+  <!-- Modal de guía de usuario mejorado -->
+
+  <script>
+    let currentPage = 1;
+    const totalPages = document.querySelectorAll('.page').length;
+
+    function showPage(pageNum) {
+      document.querySelectorAll('.page').forEach(page => page.style.display = "none");
+      if (document.getElementById(`page${pageNum}`)) {
+        document.getElementById(`page${pageNum}`).style.display = "block";
+        document.getElementById('pageCounter').innerText = `${pageNum} / ${totalPages}`;
+      }
+    }
+
+    function nextPage() {
+      if (document.getElementById(`page${currentPage + 1}`)) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    }
+
+    // Inicializar primera página visible y contador
+    showPage(currentPage);
+  </script>
 
   <footer>
     <br><br>
